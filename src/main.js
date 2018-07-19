@@ -7,16 +7,7 @@ import './main.less'
         var defaultSettings = {
             // texts
             title: '请选择',
-            data: [{
-                text: '剧毒',
-                id: 1
-            }, {
-                text: '蚂蚁',
-                id: 2
-            }, {
-                text: '测试',
-                id: 3
-            }],
+            data: [],
 
             // buttons
             cancelTxt: 'cancel',
@@ -62,11 +53,12 @@ import './main.less'
         $self.init = function() {
             $self.show()
         }
-
+        $self.isEmpty = function () {
+            return !$self.settings.data.length
+        }
         // confirm
         $self.confirm = function(e) {
-            console.log('点击了confirm', e)
-            // $self._destroy()
+            console.log('点击了confirm')
 
             let selectObj = $self.getData()
 
@@ -121,7 +113,11 @@ import './main.less'
         }
 
         $self.getData = function() {
-            return $self.settings.data[$self.$wheel.getSelectedIndex()]
+            if (!$self.isEmpty()) {
+                return $self.settings.data[$self.$wheel.getSelectedIndex()]
+            } else {
+                return {}
+            }
         }
 
         // index of data
@@ -180,6 +176,7 @@ import './main.less'
 
             // updateSelectedIndex
             $self.updateSelectedIndex()
+
             // creat wheel
             $self.$wheel = new BScroll('.wheel', {
                 wheel: {
@@ -203,7 +200,6 @@ import './main.less'
             $self.after(defaultHtml)
 
             $('.wheel-scroll').append(liHtml).closest('.pick').show()
-
         }
 
         $self.init()
@@ -225,7 +221,9 @@ function init () {
         confirm: function (data) {
             console.log('点击了确定回调')
             console.log('回调函数里的data:', data)
-            jquery('#test').html(data.text)
+            if (data.text) {
+                jquery('#test').html(data.text)
+            }
         }
     })
 }
