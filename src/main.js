@@ -155,8 +155,12 @@ import './main.less'
         // show selectScroll
         $self.show = function() {
             console.log('这里是show函数')
-            for (let i = 0; i < $self.settings.maxLevel; i++) {
-                $self._createWheel(i)
+            if ($self.next('.picker').length) {
+                $self.next('.picker').show()
+            } else {
+                for (let i = 0; i < $self.settings.maxLevel; i++) {
+                    $self._createWheel(i)
+                }
             }
         }
 
