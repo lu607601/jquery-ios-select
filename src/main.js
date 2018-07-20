@@ -7,8 +7,61 @@ import './main.less'
         var defaultSettings = {
             // texts
             title: '请选择',
-            data: [],
+            maxLevel: 1, // multi-selected required
+            // 1级数据
+            data: [[{
+                  text: '水晶室女',
+                  id: 12
+                },
+                {
+                  text: '莉娜',
+                  id: 13
+                },
+                {
+                  text: '斯拉克',
+                  id: 14
+                },
+                {
+                  text: '斯拉达',
+                  id: 15
+                }]],
 
+            // 2级数据
+
+            // data: [
+            //     [{
+            //       text: '水晶室女',
+            //       id: 12
+            //     },
+            //     {
+            //       text: '莉娜',
+            //       id: 13
+            //     },
+            //     {
+            //       text: '斯拉克',
+            //       id: 14
+            //     },
+            //     {
+            //       text: '斯拉达',
+            //       id: 15
+            //     }],
+            //     [{
+            //       text: '水晶室女22',
+            //       id: 12
+            //     },
+            //     {
+            //       text: '莉娜22',
+            //       id: 13
+            //     },
+            //     {
+            //       text: '斯拉克22',
+            //       id: 14
+            //     },
+            //     {
+            //       text: '斯拉达22',
+            //       id: 15
+            //     }]
+            // ],
             // buttons
             cancelTxt: 'cancel',
             cancelClass: '',
@@ -18,13 +71,31 @@ import './main.less'
             confirm: null,
 
             // controls
-            selectedIndex: 0,
+            selectedIndex: [0],
 
             // class
             class: ''
         }
 
         this.settings = $.extend({}, defaultSettings, options)
+
+        // option value of maxLevel： 1、2
+        this.settings.maxLevel = this.settings.maxLevel < 0 ? 1 : this.settings.maxLevel > 2 ? 2 : this.settings.maxLevel
+
+        function getWheelHtml () {
+            let tempWheelHtml = ''
+            for (let i = 0; i < this.settings.maxLevel; i++) {
+                tempWheelHtml += `<div class="wheel">
+                                    <ul class="wheel-scroll">
+                                    </ul>
+                                </div>
+                                `
+            }
+            return tempWheelHtml
+        }
+
+        var wheelHtml = getWheelHtml.call(this)
+
         var defaultHtml = `<div class="picker">
             <div class="picker-panel">
                 <div class="picker-choose border-bottom-1px">
@@ -35,12 +106,9 @@ import './main.less'
                 <div class="picker-content">
                     <div class="mask-top border-bottom-1px"></div>
                     <div class="mask-bottom border-top-1px"></div>
-                    <div class="wheel-wrapper">
-                        <div class="wheel">
-                            <ul class="wheel-scroll">
-                            </ul>
-                        </div>
-                    </div>
+                    <div class="wheel-wrapper">`
+                    + wheelHtml +
+                    `</div>
                 </div>
                 <div class="picker-footer"></div>
             </div>
@@ -48,17 +116,18 @@ import './main.less'
 
         var $self = this
 
-        $self.$wheel = null // 创建select-scroll对象
+        $self.$wheel = [] // 存放select-scroll对象的数组
+
+        $self.isEmpty = function () {
+            return !$self.settings.data.length
+        }
 
         $self.init = function() {
             $self.show()
         }
-        $self.isEmpty = function () {
-            return !$self.settings.data.length
-        }
         // confirm
         $self.confirm = function(e) {
-            console.log('点击了confirm')
+            // console.log('点击了confirm')
 
             let selectObj = $self.getData()
 
@@ -68,27 +137,25 @@ import './main.less'
             if (e.data.callback) {
                 e.data.callback(selectObj)
             }
-            console.log('确定里的getData:', $self.getData())
         }
 
         // cancel
         $self.cancel = function() {
             console.log('点击了cancel')
-            $self._destroy()
+            $self.hide()
         }
 
         // show selectScroll
         $self.show = function() {
             console.log('这里是show函数')
-            $self._createWheel()
+            for (let i = 0; i < $self.settings.maxLevel; i++) {
+                $self._createWheel(i)
+            }
         }
 
         // hide
         $self.hide = function() {
             console.log('这里是hide')
-            if ($self.$wheel) {
-                $self.$wheel.disable()
-            }
             if ($self.$picker) {
                 $self.$picker.hide()
             }
@@ -97,10 +164,10 @@ import './main.less'
         // destroy
         $self._destroy = function() {
             console.log('这里是_destroy')
-            if ($self.$wheel) {
-                $self.$wheel.disable()
-                $self.$wheel.destroy()
-                console.log('这里是_destroy里的$self.$wheel')
+            if ($self.$wheel[index]) {
+                $self.$wheel[index].disable()
+                $self.$wheel[index].destroy()
+                console.log('这里是_destroy里的$self.$wheel[index]')
             }
             if ($self.$picker) {
                 $self.$picker.remove()
@@ -113,10 +180,14 @@ import './main.less'
         }
 
         $self.getData = function() {
+            let tempArr = []
             if (!$self.isEmpty()) {
-                return $self.settings.data[$self.$wheel.getSelectedIndex()]
+                for (let i = 0; i < $self.$wheel.length; i++) {
+                    tempArr.push($self.settings.data[i][$self.$wheel[i].getSelectedIndex()])
+                }
+                return tempArr
             } else {
-                return {}
+                return []
             }
         }
 
@@ -130,13 +201,17 @@ import './main.less'
             console.log('这是updateSelectedIndex:')
             // if  $self  has attr data-selectIndex
             if ($self.attr('data-selectindex')) {
-                $self.settings.selectedIndex = $self.attr('data-selectindex')
+                $self.settings.selectedIndex = $self.attr('data-selectindex').split(',')
             }
         }
 
         // set attr data-selectIndex for $self
-        $self.bindSelectedIndex = function (index) {
-            $self.attr('data-selectIndex', $self.$wheel.getSelectedIndex() || index)
+        $self.bindSelectedIndex = function () {
+            let selectedIndex = []
+            for (let i = 0; i < $self.$wheel.length; i++) {
+                selectedIndex.push($self.$wheel[i].getSelectedIndex())
+            }
+            $self.attr('data-selectIndex', selectedIndex)
         }
 
         // unbind buttons events
@@ -164,12 +239,11 @@ import './main.less'
 
         $self.scrollTo = function(index) {
             console.log('这是scrollTo')
-            $self.$wheel.wheelTo(index)
-            console.log('$self.$wheel:\n', $self.$wheel)
+            $self.$wheel[index].wheelTo(index)
         }
 
-        $self._createWheel = function() {
-            $self._createHtml()
+        $self._createWheel = function(index) {
+            $self._createHtml(index)
 
             // get only dom $picker
             $self.$picker = $self.next('.picker')
@@ -177,10 +251,12 @@ import './main.less'
             // updateSelectedIndex
             $self.updateSelectedIndex()
 
+            let wheels = document.querySelectorAll('.wheel')
+
             // creat wheel
-            $self.$wheel = new BScroll('.wheel', {
+            $self.$wheel[index] = new BScroll(wheels[index], {
                 wheel: {
-                    selectedIndex: $self.settings.selectedIndex,
+                    selectedIndex: $self.settings.selectedIndex[index],
                     wheelWrapperClass: 'wheel-scroll',
                     wheelItemClass: 'wheel-item'
                 },
@@ -190,19 +266,23 @@ import './main.less'
             $self.attachButtonEvents()
         }
 
-        $self._createHtml = function() {
+        $self._createHtml = function(index) {
 
             var liHtml = ''
-            for(var i = 0; i < this.settings.data.length; i ++) {
-                liHtml += `<li class="wheel-item" data-id="` + this.settings.data[i].id + `">` + this.settings.data[i].text + `</li>`
+            let dataLen = this.settings.data.length ? this.settings.data[index].length : 0
+            for(var i = 0; i < dataLen; i ++) {
+                liHtml += `<li class="wheel-item" data-id="` + this.settings.data[index][i].id + `">` + this.settings.data[index][i].text + `</li>`
+            }
+            // only first time can add defaultHtml
+            if (!index) {
+                $self.after(defaultHtml)
             }
 
-            $self.after(defaultHtml)
-
-            $('.wheel-scroll').append(liHtml).closest('.pick').show()
+            $('.wheel-scroll').eq(index).append(liHtml).closest('.pick').show()
         }
 
         $self.init()
+
     }
 })(jquery);
 
@@ -210,7 +290,7 @@ import './main.less'
 function init () {
     jquery('#test').selectScroll({
         title: '测试title',
-        selectedIndex: 2,
+        selectedIndex: [1, 0],
         cancelTxt: '取消',
         cancelClass: 'cancelClass',
         confirmTxt: '确定',
@@ -221,9 +301,6 @@ function init () {
         confirm: function (data) {
             console.log('点击了确定回调')
             console.log('回调函数里的data:', data)
-            if (data.text) {
-                jquery('#test').html(data.text)
-            }
         }
     })
 }
