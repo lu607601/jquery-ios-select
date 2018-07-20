@@ -218,7 +218,10 @@ import './main.less'
             for (let i = 0; i < $self.$wheel.length; i++) {
                 selectedIndex.push($self.$wheel[i].getSelectedIndex())
             }
-            $self.attr('data-selectIndex', selectedIndex)
+            // selectedIndex must have value
+            if (selectedIndex.lenght) {
+                $self.attr('data-selectIndex', selectedIndex)
+            }
         }
 
         // unbind buttons events
