@@ -8,60 +8,60 @@ import './main.less'
             // texts
             title: '请选择',
             // 1级数据
-            data: [],
+            // data: [],
 
             // 多级数据
 
-            // data: [
-            //     [{
-            //       text: '水晶室女水晶室女水晶室女水晶室女水晶室女',
-            //       id: 12
-            //     },
-            //     {
-            //       text: '莉娜',
-            //       id: 13
-            //     },
-            //     {
-            //       text: '斯拉克',
-            //       id: 14
-            //     },
-            //     {
-            //       text: '斯拉达',
-            //       id: 15
-            //     }],
-            //     [{
-            //       text: '水晶室女22水晶室女22水晶室女22水晶室女22水晶室女22水晶室女22水晶室女22',
-            //       id: 12
-            //     },
-            //     {
-            //       text: '莉娜22',
-            //       id: 13
-            //     },
-            //     {
-            //       text: '斯拉克22',
-            //       id: 14
-            //     },
-            //     {
-            //       text: '斯拉达33',
-            //       id: 15
-            //     }],
-            //     [{
-            //       text: '水晶室女33',
-            //       id: 12
-            //     },
-            //     {
-            //       text: '莉娜33',
-            //       id: 13
-            //     },
-            //     {
-            //       text: '斯拉克33',
-            //       id: 14
-            //     },
-            //     {
-            //       text: '斯拉达33斯拉达33斯拉达33斯拉达33斯拉达33斯拉达33',
-            //       id: 15
-            //     }]
-            // ],
+            data: [
+                [{
+                  text: '水晶室女水晶室女水晶室女水晶室女水晶室女',
+                  id: 12
+                },
+                {
+                  text: '莉娜',
+                  id: 13
+                },
+                {
+                  text: '斯拉克',
+                  id: 14
+                },
+                {
+                  text: '斯拉达',
+                  id: 15
+                }],
+                [{
+                  text: '水晶室女22水晶室女22水晶室女22水晶室女22水晶室女22水晶室女22水晶室女22',
+                  id: 12
+                },
+                {
+                  text: '莉娜22',
+                  id: 13
+                },
+                {
+                  text: '斯拉克22',
+                  id: 14
+                },
+                {
+                  text: '斯拉达33',
+                  id: 15
+                }],
+                [{
+                  text: '水晶室女33',
+                  id: 12
+                },
+                {
+                  text: '莉娜33',
+                  id: 13
+                },
+                {
+                  text: '斯拉克33',
+                  id: 14
+                },
+                {
+                  text: '斯拉达33斯拉达33斯拉达33斯拉达33斯拉达33斯拉达33',
+                  id: 15
+                }]
+            ],
             // buttons
             cancelTxt: 'cancel',
             cancelClass: '',
@@ -82,9 +82,9 @@ import './main.less'
         // option value of maxLevel： 1、2
         // this.settings.maxLevel = this.settings.maxLevel < 0 ? 1 : this.settings.maxLevel > 2 ? 2 : this.settings.maxLevel
         this.settings.maxLevel = this.settings.data.length > 3 ? 3 : this.settings.data.length > 0 ? this.settings.data.length : 1
-        function getWheelHtml () {
+        function getWheelHtml (len) {
             let tempWheelHtml = ''
-            for (let i = 0; i < this.settings.maxLevel; i++) {
+            for (let i = 0; i < len; i++) {
                 tempWheelHtml += `<div class="wheel">
                                     <ul class="wheel-scroll">
                                     </ul>
@@ -94,7 +94,7 @@ import './main.less'
             return tempWheelHtml
         }
 
-        var wheelHtml = getWheelHtml.call(this)
+        var wheelHtml = getWheelHtml.call(this, this.settings.maxLevel)
 
         var defaultHtml = `<div class="picker">
             <div class="picker-panel">
@@ -136,6 +136,13 @@ import './main.less'
 
             if (e.data.callback) {
                 e.data.callback(selectObj)
+            } else {
+                let text = ''
+                Object.keys(selectObj).reduce(function (prev, cur) {
+                    text += selectObj[prev].text + ',' + selectObj[cur].text
+                    return cur
+                })
+                $self.html(text)
             }
         }
 
@@ -303,9 +310,8 @@ function init () {
         cancel: function () {
             console.log('点击了取消回调')
         },
-        confirm: function (data) {
-            console.log('点击了确定回调')
-            console.log('回调函数里的data:', data)
+        confirm: function () {
+            console.log('点击了确认回调')
         }
     })
 }
