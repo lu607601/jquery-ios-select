@@ -7,29 +7,9 @@ import './main.less'
         var defaultSettings = {
             // texts
             title: '请选择',
-            maxLevel: 1, // multi-selected required
+            // maxLevel: 1, // multi-selected required
             // 1级数据
-            data: [[{
-                  text: '水晶室女',
-                  id: 12
-                },
-                {
-                  text: '莉娜',
-                  id: 13
-                },
-                {
-                  text: '斯拉克',
-                  id: 14
-                },
-                {
-                  text: '斯拉达',
-                  id: 15
-                }]],
-
-            // 2级数据
-
-            // data: [
-            //     [{
+            // data: [[{
             //       text: '水晶室女',
             //       id: 12
             //     },
@@ -44,24 +24,60 @@ import './main.less'
             //     {
             //       text: '斯拉达',
             //       id: 15
-            //     }],
-            //     [{
-            //       text: '水晶室女22',
-            //       id: 12
-            //     },
-            //     {
-            //       text: '莉娜22',
-            //       id: 13
-            //     },
-            //     {
-            //       text: '斯拉克22',
-            //       id: 14
-            //     },
-            //     {
-            //       text: '斯拉达22',
-            //       id: 15
-            //     }]
-            // ],
+            //     }]],
+
+            // 多级数据
+
+            data: [
+                [{
+                  text: '水晶室女水晶室女水晶室女水晶室女水晶室女',
+                  id: 12
+                },
+                {
+                  text: '莉娜',
+                  id: 13
+                },
+                {
+                  text: '斯拉克',
+                  id: 14
+                },
+                {
+                  text: '斯拉达',
+                  id: 15
+                }],
+                [{
+                  text: '水晶室女22水晶室女22水晶室女22水晶室女22水晶室女22水晶室女22水晶室女22',
+                  id: 12
+                },
+                {
+                  text: '莉娜22',
+                  id: 13
+                },
+                {
+                  text: '斯拉克22',
+                  id: 14
+                },
+                {
+                  text: '斯拉达33',
+                  id: 15
+                }],
+                [{
+                  text: '水晶室女33',
+                  id: 12
+                },
+                {
+                  text: '莉娜33',
+                  id: 13
+                },
+                {
+                  text: '斯拉克33',
+                  id: 14
+                },
+                {
+                  text: '斯拉达33斯拉达33斯拉达33斯拉达33斯拉达33斯拉达33',
+                  id: 15
+                }]
+            ],
             // buttons
             cancelTxt: 'cancel',
             cancelClass: '',
@@ -71,7 +87,7 @@ import './main.less'
             confirm: null,
 
             // controls
-            selectedIndex: [0],
+            selectedIndex: [0, 0, 0],
 
             // class
             class: ''
@@ -80,7 +96,8 @@ import './main.less'
         this.settings = $.extend({}, defaultSettings, options)
 
         // option value of maxLevel： 1、2
-        this.settings.maxLevel = this.settings.maxLevel < 0 ? 1 : this.settings.maxLevel > 2 ? 2 : this.settings.maxLevel
+        // this.settings.maxLevel = this.settings.maxLevel < 0 ? 1 : this.settings.maxLevel > 2 ? 2 : this.settings.maxLevel
+        this.settings.maxLevel = this.settings.data.length > 3 ? 3 : this.settings.data.length
 
         function getWheelHtml () {
             let tempWheelHtml = ''
@@ -199,6 +216,13 @@ import './main.less'
         // update selectedIndex
         $self.updateSelectedIndex = function () {
             console.log('这是updateSelectedIndex:')
+
+            // autofill $self.settings.selectedIndex
+            let i = $self.settings.selectedIndex.length
+            for (i; i < $self.settings.maxLevel; i++) {
+                $self.settings.selectedIndex[i] = 0
+            }
+
             // if  $self  has attr data-selectIndex
             if ($self.attr('data-selectindex')) {
                 $self.settings.selectedIndex = $self.attr('data-selectindex').split(',')
@@ -290,7 +314,7 @@ import './main.less'
 function init () {
     jquery('#test').selectScroll({
         title: '测试title',
-        selectedIndex: [1, 0],
+        selectedIndex: [0],
         cancelTxt: '取消',
         cancelClass: 'cancelClass',
         confirmTxt: '确定',
