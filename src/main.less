@@ -1,15 +1,13 @@
-* {
-    margin: 0;
-    padding: 0;
-}
-li {
-    list-style: none;
-}
 html {
     font-size: calc(100/7.5);
 }
 #app {
     width: 100%;
+}
+ul, li {
+    margin: 0;
+    padding: 0;
+    list-style: none;
 }
 .test {
     width: 8rem;
@@ -17,7 +15,22 @@ html {
     margin: 2rem auto;
     border: 1px solid #ddd;
 }
-
+@keyframes select-scroll-showup {
+    0% {
+        bottom: -273px;
+    }
+    100% {
+        bottom: 0
+    }
+}
+@keyframes select-scroll-hidedown {
+    0% {
+        bottom: 0;
+    }
+    100% {
+        bottom: -273px
+    }
+}
 .picker {
     position: fixed;
     left: 0;
@@ -32,10 +45,17 @@ html {
     .picker-panel {
         position: absolute;
         z-index: 600;
-        bottom: 0;
         width: 100%;
         height: 273px;
         background: #fff;
+        &.up {
+            bottom: 0;
+            animation: select-scroll-showup .3s 0s linear;
+        }
+        &.down {
+            bottom: -273px;
+            animation: select-scroll-hidedown .3s 0s linear;
+        }
     }
 
     .picker-panel {

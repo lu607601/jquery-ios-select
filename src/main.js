@@ -123,8 +123,16 @@ import './main.less'
         }
 
         $self.init = function() {
-            $self.show()
+            if ($self.next('.picker').length) {
+                $self.show()
+            } else {
+                $self.after(defaultHtml)
+                for (let i = 0; i < $self.settings.maxLevel; i++) {
+                    $self._createWheel(i)
+                }
+            }
         }
+
         // confirm
         $self.confirm = function(e) {
             // console.log('点击了confirm')
@@ -155,20 +163,22 @@ import './main.less'
         // show selectScroll
         $self.show = function() {
             console.log('这里是show函数')
-            if ($self.next('.picker').length) {
-                $self.next('.picker').show()
-            } else {
-                for (let i = 0; i < $self.settings.maxLevel; i++) {
-                    $self._createWheel(i)
-                }
-            }
+            $self.$picker = $self.next('.picker')
+            $self.$picker.show()
+            $self.$picker.find('.picker-panel').attr('class', 'picker-panel').addClass('up')
         }
 
         // hide
         $self.hide = function() {
             console.log('这里是hide')
             if ($self.$picker) {
-                $self.$picker.hide()
+                let $pannel = $self.$picker.find('.picker-panel')
+                $pannel.attr('class', 'picker-panel').addClass('down')
+
+                let timer = setTimeout(function () {
+                    $self.$picker.hide()
+                    clearTimeout(timer)
+                }, 300)
             }
         }
 
@@ -264,10 +274,7 @@ import './main.less'
         }
 
         $self._createWheel = function(index) {
-            $self._createHtml(index)
-
-            // get only dom $picker
-            $self.$picker = $self.next('.picker')
+            $self._createHtml(index) // 运行3次
 
             // updateSelectedIndex
             $self.updateSelectedIndex()
@@ -284,7 +291,12 @@ import './main.less'
                 probeType: 3
             })
 
-            $self.attachButtonEvents()
+            if (index === $self.settings.maxLevel - 1) {
+                console.log('运行了几次函数绑定')
+                // get only dom $picker
+                $self.show()
+                $self.attachButtonEvents()
+            }
         }
 
         $self._createHtml = function(index) {
@@ -294,12 +306,7 @@ import './main.less'
             for(var i = 0; i < dataLen; i ++) {
                 liHtml += `<li class="wheel-item" data-id="` + this.settings.data[index][i].id + `">` + this.settings.data[index][i].text + `</li>`
             }
-            // only first time can add defaultHtml
-            if (!index) {
-                $self.after(defaultHtml)
-            }
-
-            $('.wheel-scroll').eq(index).append(liHtml).closest('.pick').show()
+            $('.wheel-scroll').eq(index).append(liHtml)
         }
 
         $self.init()
@@ -314,8 +321,8 @@ function init () {
         cancel: function () {
             console.log('点击了取消回调')
         },
-        confirm: function () {
-            console.log('点击了确认回调')
+        confirm: function (data) {
+            console.log('点击了确认回调', data)
         }
     })
 }
