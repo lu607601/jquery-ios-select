@@ -22,6 +22,7 @@
     "babel-plugin-import": "1.6.3",
     "babel-plugin-transform-modules": "^0.1.0",
     "babel-preset-env": "^1.6.1",
+    "babel-preset-es2015": "6.24.1",
     "babel-preset-stage-2": "6.24.1",
     "babel-runtime": "^6.11.6",
     "cross-env": "5.0.5",

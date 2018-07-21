@@ -16,7 +16,11 @@ module.exports = {
         {
             test: /\.js$/,
             loader: 'babel-loader',
-            include: path.resolve('src')
+            include: path.resolve('src'),
+            options: {
+             presets: ['es2015']
+            }
+
         },
         {
             test: /\.css$/,
