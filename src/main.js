@@ -127,6 +127,10 @@ import './main.less'
                 $self.show()
             } else {
                 $self.after(defaultHtml)
+                // add class
+                if ($self.settings.class != '') {
+                    $self.next('.picker').addClass($self.settings.class)
+                }
                 for (let i = 0; i < $self.settings.maxLevel; i++) {
                     $self._createWheel(i)
                 }
