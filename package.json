@@ -11,8 +11,7 @@
   "author": "CRYSTAL",
   "license": "ISC",
   "dependencies": {
-    "better-scroll": "1.12.4",
-    "jquery": "1.11.3"
+    "better-scroll": "1.12.4"
   },
   "devDependencies": {
     "autoprefixer-loader": "^2.0.0",

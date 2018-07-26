@@ -22,22 +22,18 @@ module.exports = merge(webpackBaseConfig, {
     },
     output: {
         publicPath: '/',
-        filename: '[name].js',
-        chunkFilename: '[name].chunk.js'
+        filename: 'jquery.selectscroll.js',
+        chunkFilename: 'jquery.selectscroll.chunk.js'
     },
     plugins: [
         new ExtractTextPlugin({
             filename: '[name].css',
             allChunks: true
         }),
-        new webpack.optimize.CommonsChunkPlugin({
-            name: 'vendors',
-            filename: 'vendors.js'
-        }),
         new HtmlWebpackPlugin({
             filename: 'index.html',
-            template: 'index.html',
-            inject: true
+            template: 'index.ejs',
+            inject: false
         }),
         new webpack.HotModuleReplacementPlugin()
     ]

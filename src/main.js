@@ -1,8 +1,6 @@
-import jquery from 'jquery'
 import BScroll from 'better-scroll'
 import './main.less'
-
-;(function($) {
+(function($) {
     $.fn.selectScroll = function(options) {
         var defaultSettings = {
             // texts
@@ -12,56 +10,7 @@ import './main.less'
 
             // 多级数据
 
-            data: [
-                [{
-                  text: '水晶室女水晶室女水晶室女水晶室女水晶室女',
-                  id: 12
-                },
-                {
-                  text: '莉娜',
-                  id: 13
-                },
-                {
-                  text: '斯拉克',
-                  id: 14
-                },
-                {
-                  text: '斯拉达',
-                  id: 15
-                }],
-                [{
-                  text: '水晶室女22水晶室女22水晶室女22水晶室女22水晶室女22水晶室女22水晶室女22',
-                  id: 12
-                },
-                {
-                  text: '莉娜22',
-                  id: 13
-                },
-                {
-                  text: '斯拉克22',
-                  id: 14
-                },
-                {
-                  text: '斯拉达33',
-                  id: 15
-                }],
-                [{
-                  text: '水晶室女33',
-                  id: 12
-                },
-                {
-                  text: '莉娜33',
-                  id: 13
-                },
-                {
-                  text: '斯拉克33',
-                  id: 14
-                },
-                {
-                  text: '斯拉达33斯拉达33斯拉达33斯拉达33斯拉达33斯拉达33',
-                  id: 15
-                }]
-            ],
+            data: [],
             // buttons
             cancelTxt: 'cancel',
             cancelClass: '',
@@ -148,14 +97,21 @@ import './main.less'
 
             if (e.data.callback) {
                 e.data.callback(selectObj)
+                return
+            }
+            if (selectObj.length < 1) {
+                return
+            }
+            let text = ''
+            if (selectObj.length === 1) {
+                text = selectObj[0].text
             } else {
-                let text = ''
                 Object.keys(selectObj).reduce(function (prev, cur) {
                     text += selectObj[prev].text + ',' + selectObj[cur].text
                     return cur
                 })
-                $self.html(text)
             }
+            $self.html(text)
         }
 
         // cancel
@@ -187,18 +143,18 @@ import './main.less'
         }
 
         // destroy
-        $self._destroy = function() {
-            console.log('这里是_destroy')
-            if ($self.$wheel[index]) {
-                $self.$wheel[index].disable()
-                $self.$wheel[index].destroy()
-                console.log('这里是_destroy里的$self.$wheel[index]')
-            }
-            if ($self.$picker) {
-                $self.$picker.remove()
-                console.log('这里是_destroy里的$self.picker')
-            }
-        }
+        // $self._destroy = function() {
+        //     console.log('这里是_destroy')
+        //     if ($self.$wheel[index]) {
+        //         $self.$wheel[index].disable()
+        //         $self.$wheel[index].destroy()
+        //         console.log('这里是_destroy里的$self.$wheel[index]')
+        //     }
+        //     if ($self.$picker) {
+        //         $self.$picker.remove()
+        //         console.log('这里是_destroy里的$self.picker')
+        //     }
+        // }
 
         // setData
         $self.setData = function() {
@@ -316,20 +272,4 @@ import './main.less'
         $self.init()
 
     }
-})(jquery);
-
-// 使用
-function init () {
-    jquery('#test').selectScroll({
-        selectedIndex: [0],
-        cancel: function () {
-            console.log('点击了取消回调')
-        },
-        confirm: function (data) {
-            console.log('点击了确认回调', data)
-        }
-    })
-}
-
-var $doc = jquery(document)
-$doc.on('click', '#test', init)
+})(jQuery);

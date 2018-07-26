@@ -5,8 +5,7 @@ const PostCompilePlugin = require('webpack-post-compile-plugin')
 
 module.exports = {
     entry: {
-        main: './src/main.js',
-        vendors: './src/vendors.js'
+        main: './src/main.js'
     },
     output: {
         path: path.resolve(__dirname, '../dist')

@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <title>jquery-select-scroll</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+    <link rel="stylesheet" href="<%= htmlWebpackPlugin.files.css[0] %>">
+</head>
+
+<body>
+    <div id="app">
+        <div class="test" id="test">
+        </div>
+    </div>
+    <script src="https://cdn.bootcss.com/jquery/1.11.3/jquery.min.js"></script>
+    <script type="text/javascript" src="<%= htmlWebpackPlugin.files.js[0] %>"></script>
+    <script type="text/javascript">
+    // 使用
+    $(function() {
+        function init() {
+            $('#test').selectScroll({
+                data: [
+                    [{
+                            text: '水晶室女水晶室女水晶室女水晶室女水晶室女',
+                            id: 12
+                        },
+                        {
+                            text: '莉娜',
+                            id: 13
+                        },
+                        {
+                            text: '斯拉克',
+                            id: 14
+                        },
+                        {
+                            text: '斯拉达',
+                            id: 15
+                        }
+                    ],
+                    [{
+                            text: '水晶室女水晶室女水晶室女水晶室女水晶室女',
+                            id: 12
+                        },
+                        {
+                            text: '莉娜',
+                            id: 13
+                        },
+                        {
+                            text: '斯拉克',
+                            id: 14
+                        },
+                        {
+                            text: '斯拉达',
+                            id: 15
+                        }
+                    ]
+                ],
+                selectedIndex: [0],
+                cancel: function() {
+                    console.log('点击了取消回调')
+                },
+                confirm: function (data) {
+                    console.log('点击了确定回调', data)
+                }
+            })
+        }
+        var $doc = $(document)
+        $doc.on('click', '#test', init)
+    });
+
+    </script>
+</body>
+
+</html>
