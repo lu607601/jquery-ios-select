@@ -1,3 +1,7 @@
+### jquery-ios-select
+
+    * 类似ios机的选择器
+
 ### 参数配置
     
     * `class`

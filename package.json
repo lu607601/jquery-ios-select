@@ -1,7 +1,7 @@
 {
-  "name": "jquery-select-scroll",
+  "name": "jquery-ios-select",
   "version": "1.0.0",
-  "description": "",
+  "description": "类似ios机的选择器",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
@@ -41,5 +41,20 @@
     "webpack-dev-server": "^2.4.1",
     "webpack-merge": "^3.0.0",
     "webpack-post-compile-plugin": "^0.1.2"
-  }
+  },
+  "directories": {
+    "example": "example"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/lu607601/jquery-ios-select.git"
+  },
+  "keywords": [
+    "ios",
+    "select"
+  ],
+  "bugs": {
+    "url": "https://github.com/lu607601/jquery-ios-select/issues"
+  },
+  "homepage": "https://github.com/lu607601/jquery-ios-select#readme"
 }
